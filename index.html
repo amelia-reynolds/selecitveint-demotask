@@ -40,7 +40,6 @@
       }
 
       #instructCont, #promptCont, #contentCont {
-        display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
@@ -178,7 +177,7 @@
       function runIntro() { // run intro
         // display elements
         const intro = document.getElementById('introCont');
-        intro.style.display = 'block';
+        intro.style.display = 'flex';
         // event handling
         document.getElementById('startButton').onclick = async () => {
             try {
@@ -199,7 +198,7 @@
           // diplay alert
           const alert = document.getElementById('alertCont');
           alert.textContent = message;
-          alert.style.display = 'block'; 
+          alert.style.display = 'flex;'; 
           // alert duration
           setTimeout(() => {
               alert.style.display = 'none'; 
@@ -274,7 +273,7 @@
 
       function runContent(index, content) { // display selected content
         // html elements
-        document.getElementById('contentCont').style.display = 'block';
+        document.getElementById('contentCont').style.display = 'flex';
         document.getElementById('contentText').textContent = content;
         // event handling
         document.getElementById('contButton').onclick = () => {
