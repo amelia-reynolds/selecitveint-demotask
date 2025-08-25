@@ -1,0 +1,65 @@
+﻿Category,Label,Description,Drink
+Health,Health: Sugar content,Low sugar content,1
+Health,Health: Fat content,Low fat content,1
+Health,Health: Calorie content,Low calorie content,1
+Health,Health: Protein content,Low protein content,1
+Health,Health: Sodium content,Low sodium content,1
+Health,Health: Presence of vitamins and/or minerals,Yes: Vitamin C,1
+Health,Health: Health star rating,Very healthy: 4.5/5 stars,1
+Health,Health: Presence of natural ingredients,Contains natural ingredients only,1
+Health,Health: Sugar content,High sugar content,2
+Health,Health: Fat content,High fat content,2
+Health,Health: Calorie content,High calorie content,2
+Health,Health: Protein content,Medium protein content,2
+Health,Health: Sodium content,Low sodium content,2
+Health,Health: Presence of vitamins and/or minerals,Yes: Calcium,2
+Health,Health: Health star rating,Very unhealthy: 0.5/5 stars,2
+Health,Health: Presence of natural ingredients,Contains additivies and artificial ingredients,2
+Health,Health: Sugar content,Low sugar content,3
+Health,Health: Fat content,Low fat content,3
+Health,Health: Calorie content,Low calorie content,3
+Health,Health: Protein content,Medium protein content,3
+Health,Health: Sodium content,Low sodium content,3
+Health,Health: Presence of vitamins and/or minerals,Yes: Potassium and calcium,3
+Health,Health: Health star rating,Very healthy: 4/5 stars,3
+Health,Health: Presence of natural ingredients,Contains natural ingredients only,3
+Health,Health: Sugar content,High sugar content,4
+Health,Health: Fat content,Low fat content,4
+Health,Health: Calorie content,High calorie content,4
+Health,Health: Protein content,Low protein content,4
+Health,Health: Sodium content,Low sodium content,4
+Health,Health: Presence of vitamins and/or minerals,No,4
+Health,Health: Health star rating,Very unhealthy: 0.5/5 stars,4
+Health,Health: Presence of natural ingredients,Contains additivies and artificial ingredients,4
+Taste,Taste: Creaminess,Not at all creamy,1
+Taste,Taste: Flavour,Strawberry and watermelon,1
+Taste,Taste: Strength of flavour,Light-medium flavour intensity,1
+Taste,Taste: Carbonation,Effervescent: Very lightly sparkling,1
+Taste,Taste: Other people's perceptions of taste,Very refreshing and perfect amount of natural fruity flavours. Leaves a nice aftertaste too.,1
+Taste,Taste: Sweetness,Very slightly sweet,1
+Taste,"Taste: Category (e.g., soft drink, milk drink)",Flavoured water,1
+Taste,Taste: Bitterness,Not bitter at all,1
+Taste,Taste: Creaminess,Very creamy,2
+Taste,Taste: Flavour,Creamy vanilla coffee,2
+Taste,Taste: Strength of flavour,Medium-strong flavour intensity,2
+Taste,Taste: Carbonation,Still,2
+Taste,Taste: Other people's perceptions of taste,A delicious smooth and creamy blend of rich flavours. A definite 10/10!,2
+Taste,Taste: Sweetness,Moderately sweet,2
+Taste,"Taste: Category (e.g., soft drink, milk drink)",Flavoured milk,2
+Taste,Taste: Bitterness,Very slightly bitter,2
+Taste,Taste: Creaminess,Moderately creamy,3
+Taste,Taste: Flavour,Honeycomb and chocolate,3
+Taste,Taste: Strength of flavour,Medium flavour intensity,3
+Taste,Taste: Carbonation,Still,3
+Taste,Taste: Other people's perceptions of taste,Great flavour combination. Just the perfect amount of sweetness to satisfy that sweet tooth!,3
+Taste,Taste: Sweetness,Very slightly sweet,3
+Taste,"Taste: Category (e.g., soft drink, milk drink)",Flavoured milk,3
+Taste,Taste: Bitterness,Not bitter at all,3
+Taste,Taste: Creaminess,Not at all creamy,4
+Taste,Taste: Flavour,Mango elderflower,4
+Taste,Taste: Strength of flavour,Strong flavour intensity,4
+Taste,Taste: Carbonation,"Bold: large, firework-like bubbles",4
+Taste,Taste: Other people's perceptions of taste,Intense yet refreshing taste. Love the floral and fruity flavour combination!,4
+Taste,Taste: Sweetness,Very sweet,4
+Taste,"Taste: Category (e.g., soft drink, milk drink)",Soft drink,4
+Taste,Taste: Bitterness,Not bitter at all,4
