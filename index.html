@@ -1,108 +1,116 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selective Interrogation Task</title>
-    <!-- Import Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-    <!-- Import CSS -->
-    <link rel="stylesheet" href="styles.css">
-    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <style>
       body {
-        height: 100%;
+        font-family: sans-serif;
+        text-align: center;
         margin: 0;
-        box-sizing: border-box;
-        background-color: #f4f4f9;
-        font-family: 'Montserrat', sans-serif;
+        padding: 0;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        text-align: center;
+        height: 100vh;
+        background-color: #f4f4f9;
       }
 
       h1 {
-        font-size: 16px;
-        margin: 14px 15vw;
+        font-size: 2em;
+        margin-bottom: 5vh;
       }
-      
+
       p {
-        font-size: 14px;
-        margin: 14px 15vw;
+        font-size: 1.2em;
+        padding-left: 20%;
+        padding-right: 20%;
+        margin-top: 2.5em;
+        margin-bottom: 4em;
       }
 
       #instructCont, #alertCont, #labelGrid, #promptCont, #contentCont, #endCont{
-        display: none; /* initially hide all containers */
+        display: none; 
         width: 85%;
         max-width: 1100px;
       }
 
-      #instructCont, #contentCont, #endCont {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center; 
-        height: 100%;
-        margin: 0 auto;
-      }
-
-      #promptCont {
-        text-align: center; 
-        height: 100%;
-        margin: 0 auto;
-      }
-
-      #alertCont {
-        /* container position */
-        position: fixed;
-        top: 50%;
+      #instructCont {
         left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 10;
-        /* container atttributes */
-        max-width: 400px !important;
-        padding: 0.5vh;
-        background-color: #ffffff;
-        border: none;
-        border-radius: 5px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        /* child attributes */
-        font-size: 12px;
         text-align: center;
       }
 
+      #alertCont {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        max-width: 400px;
+        padding: 1em 2em 1em 2em;
+        transform: translate(-50%, -50%);
+        background-color: #fffae6;
+        border: 1px solid #f0c36d;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+        font-size: 1em;
+        text-align: center;
+      }
+
+      #promptCont {
+        left: 50%;
+        text-align: center;
+      }
+
+      #contentCont {
+        top: 50%;
+        left: 50%;
+        text-align: center;
+      }
+
+      #contentText {
+        font-size: 1.2em;
+        margin-top: 2.5em;
+        margin-bottom: 5em;
+      }
+
       #labelGrid {
-        /* grid attributes */
-        width: 80vw;
-        max-width: 1100px;
-        height: 80vh;
-        margin: 2vh auto;
-        /* child attributes */
-        display: grid;
-        grid-template-columns: repeat(4, 1fr); 
-        grid-template-rows: repeat(4, 1fr);    
-        gap: 1vw;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 5vh; 
       }
 
       button {
-        /* button attributes */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        padding: 0.5vh;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        /* button behaviour */
+        padding: 2em 2em 2em 2em;
+        border-radius: 5px;
+        border: none;
+        background-color: #fff;
         transition: background-color 0.3s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        font-size: 1.1em;
         cursor: pointer;
+      }
+
+      #startButton {
+        padding: 0.5em 1em 0.5em 1em;
+        border-radius: 10px;
+        border: 1px solid #019a2f;
+        background-color: #00b135;
+        font-size: 1.1em;
+        color: #fff;
+        font-weight: bold;
+      }
+
+      #contButton {
+        padding: 0.5em 1em 0.5em 1em;
+        border-radius: 10px;
+        border: 1px solid #01229a;
+        background-color: #1f3a9d;
+        font-size: 1.1em;
+        color: #fff;
+        font-weight: bold;
       }
 
       button:hover {
         background-color: #e0e0e0;
-        transform: scale(1.05);
       }
 
       button:disabled {
@@ -112,219 +120,219 @@
         cursor: not-allowed;
       }
 
-      button.start, button.continue, button.end {
-        /* button attributes */
-        padding: 0.5vh;
-        border-radius: 10px;
-        border: none;
-        /* text attributes */
-        text-align: center;
-        font-size: 12px;
-        font-weight: bold;
-        color: #fff;
-      }
-
-      button.start { background-color: #00b135; }
-      button.continue { background-color: #0065A2; }
-      button.end { background-color: #BF2C34; }
-
-      button.label {
-        /* button attributes */
-        width: 100%;
-        height: 100%; 
-        padding: 0.5vh;
-        border-radius: 3px;
-        border: none;
-        background-color: #fff;
-        /* text attributes */
-        text-align: center;
-        font-weight: normal;
-        font-size:12px;
-        color: #000;
-      }
-
     </style>
     <script>
-
-      async function loadStim(csvPath) {// fetch stimuli
-        const response = await fetch(csvPath);
-        const text = await response.text();
         
-        return new Promise((resolve, reject) => {
-          Papa.parse(text, {
-            header: true,
-            skipEmptyLines: true,
-            trimHeaders: true,
-            complete: (results) => {
-              const Stim = { category1: [], category2: [] };
-              const categories = [];
-              results.data.forEach(row => {// find unique categories
-                const category = row.category?.trim(); 
-                const label = row.label?.trim();
-                const content = row.content?.trim();
-                if (category && !categories.includes(category) && categories.length < 2) {
-                  categories.push(category);
-                }
-                if (category === categories[0]) { // assign stimuli to categories
-                  Stim.category1.push({ label, content });
-                } else if (category === categories[1]) {
-                  Stim.category2.push({ label, content });
-                }
-              });
-              console.log("Loaded categories:", categories);
-              console.log("Stimuli:", Stim);
-              resolve(Stim);
-            },
-            error: reject
-          });
-        });
-      }
+        // stimuli
 
-      const usedStim = new Set(); // stored used stimuli
-      let gridNum = 0 // store grid number
-      let usedLabels = []; // stored selected labels for each grid
-
-      function runIntro() { // run intro
-        // display elements
-        const intro = document.getElementById('introCont');
-        intro.style.display = 'flex';
-        // event handling
-        document.getElementById('startButton').onclick = async () => {
-            try {
-              const Stim = await loadStim("stimuli/SelectiveInterrogationTask_Stimuli_FilmStressor.csv");
-              window.Stim = Stim;
-              console.log("Stimuli loaded:", Stim);
-              intro.style.display = 'none';
-              gridNum += 1;
-              runAlert("The first set of options will now be made available.", 3000, runGrid);
-            } catch (err) {
-              console.error("Failed to load stimuli:", err);
-              alert("Error: Failed to load stimuli.");
-            }
+        const Stim = { // define label and content stimuli
+            category1: [
+                {label: "Category 1 Label 1", content: "This is example Category 1 Passage 1."},
+                {label: "Category 1 Label 2", content: "This is example Category 1 Passage 2."},
+                {label: "Category 1 Label 3", content: "This is example Category 1 Passage 3."},
+                {label: "Category 1 Label 4", content: "This is example Category 1 Passage 4."},
+                {label: "Category 1 Label 5", content: "This is example Category 1 Passage 5."},
+                {label: "Category 1 Label 6", content: "This is example Category 1 Passage 6."},
+                {label: "Category 1 Label 7", content: "This is example Category 1 Passage 7."},
+                {label: "Category 1 Label 8", content: "This is example Category 1 Passage 8."},
+                {label: "Category 1 Label 9", content: "This is example Category 1 Passage 9."},
+                {label: "Category 1 Label 10", content: "This is example Category 1 Passage 10."},
+                {label: "Category 1 Label 11", content: "This is example Category 1 Passage 11."},
+                {label: "Category 1 Label 12", content: "This is example Category 1 Passage 12."},
+                {label: "Category 1 Label 13", content: "This is example Category 1 Passage 13."},
+                {label: "Category 1 Label 14", content: "This is example Category 1 Passage 14."},
+                {label: "Category 1 Label 15", content: "This is example Category 1 Passage 15."},
+                {label: "Category 1 Label 16", content: "This is example Category 1 Passage 16."},
+                {label: "Category 1 Label 17", content: "This is example Category 1 Passage 17."},
+                {label: "Category 1 Label 18", content: "This is example Category 1 Passage 18."},
+                {label: "Category 1 Label 19", content: "This is example Category 1 Passage 19."},
+                {label: "Category 1 Label 20", content: "This is example Category 1 Passage 20."},
+                {label: "Category 1 Label 21", content: "This is example Category 1 Passage 21."},
+                {label: "Category 1 Label 22", content: "This is example Category 1 Passage 22."},
+                {label: "Category 1 Label 23", content: "This is example Category 1 Passage 23."},
+                {label: "Category 1 Label 24", content: "This is example Category 1 Passage 24."},
+                {label: "Category 1 Label 25", content: "This is example Category 1 Passage 25."},
+                {label: "Category 1 Label 26", content: "This is example Category 1 Passage 26."},
+                {label: "Category 1 Label 27", content: "This is example Category 1 Passage 27."},
+                {label: "Category 1 Label 28", content: "This is example Category 1 Passage 28."},
+                {label: "Category 1 Label 29", content: "This is example Category 1 Passage 29."},
+                {label: "Category 1 Label 30", content: "This is example Category 1 Passage 30."},
+                {label: "Category 1 Label 31", content: "This is example Category 1 Passage 31."},
+                {label: "Category 1 Label 32", content: "This is example Category 1 Passage 32."},
+            ],
+            category2: [
+                {label: "Category 2 Label 1", content: "This is example Category 2 Passage 1."},
+                {label: "Category 2 Label 2", content: "This is example Category 2 Passage 2."},
+                {label: "Category 2 Label 3", content: "This is example Category 2 Passage 3."},
+                {label: "Category 2 Label 4", content: "This is example Category 2 Passage 4."},
+                {label: "Category 2 Label 5", content: "This is example Category 2 Passage 5."},
+                {label: "Category 2 Label 6", content: "This is example Category 2 Passage 6."},
+                {label: "Category 2 Label 7", content: "This is example Category 2 Passage 7."},
+                {label: "Category 2 Label 8", content: "This is example Category 2 Passage 8."},
+                {label: "Category 2 Label 9", content: "This is example Category 2 Passage 9."},
+                {label: "Category 2 Label 10", content: "This is example Category 2 Passage 10."},
+                {label: "Category 2 Label 11", content: "This is example Category 2 Passage 11."},
+                {label: "Category 2 Label 12", content: "This is example Category 2 Passage 12."},
+                {label: "Category 2 Label 13", content: "This is example Category 2 Passage 13."},
+                {label: "Category 2 Label 14", content: "This is example Category 2 Passage 14."},
+                {label: "Category 2 Label 15", content: "This is example Category 2 Passage 15."},
+                {label: "Category 2 Label 16", content: "This is example Category 2 Passage 16."},
+                {label: "Category 2 Label 17", content: "This is example Category 2 Passage 17."},
+                {label: "Category 2 Label 18", content: "This is example Category 2 Passage 18."},
+                {label: "Category 2 Label 19", content: "This is example Category 2 Passage 19."},
+                {label: "Category 2 Label 20", content: "This is example Category 2 Passage 20."},
+                {label: "Category 2 Label 21", content: "This is example Category 2 Passage 21."},
+                {label: "Category 2 Label 22", content: "This is example Category 2 Passage 22."},
+                {label: "Category 2 Label 23", content: "This is example Category 2 Passage 23."},
+                {label: "Category 2 Label 24", content: "This is example Category 2 Passage 24."},
+                {label: "Category 2 Label 25", content: "This is example Category 2 Passage 25."},
+                {label: "Category 2 Label 26", content: "This is example Category 2 Passage 26."},
+                {label: "Category 2 Label 27", content: "This is example Category 2 Passage 27."},
+                {label: "Category 2 Label 28", content: "This is example Category 2 Passage 28."},
+                {label: "Category 2 Label 29", content: "This is example Category 2 Passage 29."},
+                {label: "Category 2 Label 30", content: "This is example Category 2 Passage 30."},
+                {label: "Category 2 Label 31", content: "This is example Category 2 Passage 31."},
+                {label: "Category 2 Label 32", content: "This is example Category 2 Passage 32."},
+            ]
         };
-      }
+        
+        const usedStim = new Set(); // stored used stimuli
+        let gridNum = 0 // store grid number
+        let usedLabels = []; // stored selected labels for each grid
+        
+        // displays
+        
+        function runIntro() { // task intro 
+            // display elements
+            const intro = document.getElementById('introCont');
+            intro.style.display = 'block';
+            // event handling
+            document.getElementById('startButton').onclick = () => {
+                intro.style.display = 'none';
+                gridNum += 1;
+                runAlert("The first set of options will now be made available.", 3000, runGrid);
+            };
+        }
 
-      function runAlert(message, duration, callback = null) { // run alert
-          // diplay alert
-          const alert = document.getElementById('alertCont');
-          alert.textContent = message;
-          alert.style.display = 'block'; 
-          // alert duration
-          setTimeout(() => {
-              alert.style.display = 'none'; 
-              if (callback) callback(); 
-          }, duration);
-      }
+        function runAlert(message, duration, callback = null) { // task alerts
+            // diplay alert
+            const alert = document.getElementById('alertCont');
+            alert.textContent = message;
+            alert.style.display = 'block'; 
+            // alert duration
+            setTimeout(() => {
+                alert.style.display = 'none'; 
+                if (callback) callback(); 
+            }, duration);
+        }
 
-      function runGrid() { // run grid
-        const container = document.getElementById('labelGrid');
-        container.innerHTML ='';
-        container.style.display='grid';
-        const prompt = document.getElementById('promptCont');
-        prompt.style.display = 'block';
-        // define array shuffle function
-        function shuffleStim(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+        function runGrid() { // generate subsets for each grid
+            const container = document.getElementById('labelGrid');
+            container.innerHTML ='';
+            container.style.display='grid';
+            const prompt = document.getElementById('promptCont');
+            prompt.style.display = 'block';
+            // define array shuffle function
+            function shuffleStim(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            }
+            // filter and subset labels
+            function getSubset(array, count) {
+                const unused = array.filter(item => !usedStim.has(item.label));
+                shuffleStim(unused);
+                return unused.slice(0, count);
+            }
+            // select subset
+            const selectedCategory1 = getSubset(Stim.category1, 8);
+            const selectedCategory2 = getSubset(Stim.category2, 8);
+            const allSelected = [...selectedCategory1, ...selectedCategory2];
+            shuffleStim(allSelected);
+            allSelected.forEach(option => usedStim.add(option.label)); // removed used stimuli from pool
+            // populate grid
+            allSelected.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option.label;
+                button.onclick = () => {
+                    document.getElementById('labelGrid').style.display = 'none';
+                    document.getElementById('promptCont').style.display = 'none';
+                    runContent(index, option.content);
+                }
+                container.appendChild(button);
+            });
+        }
+
+        function runContent(index, content) { // display selected content
+            // display elements
+            document.getElementById('contentCont').style.display = 'block';
+            document.getElementById('contentText').textContent = content;
+            // event handling
+            document.getElementById('contButton').onclick = () => {
+                if (!usedLabels.includes(index)) { // disabled selected options
+                    usedLabels.push(index);
+                    const buttons = document.querySelectorAll('#labelGrid button');
+                    const usedButton = buttons[index];
+                    usedButton.textContent = '';
+                    usedButton.disabled = true;
+                }
+                if (usedLabels.length >= 8) { // generate next grid
+                    document.getElementById('contentCont').style.display = 'none';
+                    resetGrid();
+                } else { // display grid
+                    document.getElementById('contentCont').style.display = 'none';
+                    document.getElementById('labelGrid').style.display = 'grid';
+                    document.getElementById('promptCont').style.display = 'block';
+                }
+            };
+        }
+
+        function resetGrid() {
+            if (usedStim.size === 64) {
+                runAlert("This is the end of the task.", 3000);
+                return;
+            } else {
+                usedLabels = [];
+                gridNum += 1;
+                runAlert("New options will now be made available.", 3000, runGrid);
             }
         }
-        // filter and subset labels
-        function getSubset(array, count) {
-            const unused = array.filter(item => !usedStim.has(item.label));
-            shuffleStim(unused);
-            return unused.slice(0, count);
-        }
-        // select stimuli from pool
-        const selectedCategory1 = getSubset(Stim.category1, 8);
-        const selectedCategory2 = getSubset(Stim.category2, 8);
-        // generate subset for grid
-        const allSelected = [...selectedCategory1, ...selectedCategory2];
-        shuffleStim(allSelected);
-        allSelected.forEach(option => usedStim.add(option.label)); // removed used stimuli from pool
-        // populate grid
-        allSelected.forEach((option, index) => {
-            const button = document.createElement('button');
-            button.innerHTML = option.label;
-            button.onclick = () => {
-                document.getElementById('labelGrid').style.display = 'none';
-                document.getElementById('promptCont').style.display = 'none';
-                runContent(index, option.content);
-            }
-            container.appendChild(button);
-        });
-      }
-
-      function runContent(index, content) { // display selected content
-        // html elements
-        document.getElementById('contentCont').style.display = 'flex';
-        document.getElementById('contentText').textContent = content;
-        // event handling
-        document.getElementById('contButton').onclick = () => {
-            if (!usedLabels.includes(index)) { // disabled selected options
-                usedLabels.push(index);
-                const buttons = document.querySelectorAll('#labelGrid button');
-                const usedButton = buttons[index];
-                usedButton.textContent = '';
-                usedButton.disabled = true;
-            }
-            if (usedLabels.length >= 8) { // generate next grid
-                document.getElementById('contentCont').style.display = 'none';
-                resetGrid();
-            } else { // display grid
-                document.getElementById('contentCont').style.display = 'none';
-                document.getElementById('labelGrid').style.display = 'grid';
-                document.getElementById('promptCont').style.display = 'flex';
-            }
-        };
-      }
-
-      function resetGrid() { // reset grid
-          if (usedStim.size === 64) {
-              runAlert("This is the end of the task.", 3000);
-              return;
-          } else {
-              usedLabels = [];
-              gridNum += 1;
-              runAlert("New options will now be made available.", 3000, runGrid);
-          }
-      }
     
     </script>
   </head>
   <body onload="runIntro()">
-    <!-- Start Menu -->
-    <!-- Task Instructions -->
+    <!-- Instructions Page -->
      <div id="introCont">
         <h1>Task Instructions</h1>
         <p>Sample instructions: In this task you will read short passages describing [insert event or topic of interest]. You will be asked to select the passages you read from a pool of available options.
         <br><br>The task will present 4 screens, each of which will display 16 passage options. The options will be represented by a label indicating the [insert label stimuli] described in the corresponding passage. To select a passage you want to read, click the label using the mouse. Once you select a label, the passage will then be presented for you to read in full. Please ensure you read the passage carefully. Then, click the 'continue' button.
         <br><br>You will <strong>only</strong> be able to read <strong>half</strong> the available passage options on each screen. Once you have read half the available options on the screen, the screen will be refreshed, and new options will be presented.
-        <br><br>When you are ready, click the 'Start' button below.</p>
-        <button class="start" id="startButton">Start</button>
+        <br><br>When you are ready, click the 'start' button below.</p>
+        <button id="startButton">Start</button>
      </div>
     
     <!-- Grid Page -->
-    <div id="labelGrid"></div>
-    <div id="promptCont">
-      <p>Select an option to continue.</p>
-    </div>
+     <div id="labelGrid"></div>
+     <div id="promptCont">
+        <p>Use the mouse to select an option.</p>
+     </div>
     
     <!-- Content Page -->
-    <div id="contentCont">
-      <div id="contentText"></div>
-      <button class="continue" id="contButton">Continue</button>
-    </div>
+      <div id="contentCont">
+        <div id="contentText"></div>
+        <button id="contButton">Continue</button>
+      </div>
     
-    <!-- Alerts -->
-    <div id="alertCont"></div>
+      <!-- Alerts -->
+      <div id="alertCont"></div>
 
-    <!-- End Page -->
-    <div id="endCont">
-      <h1>Task End</h1>
-      <p>This is the end of task. To return to the demo menu, select the 'End Task' button below.</p>
-      <button class="end" id="endButton">End Task</button>
-    </div>
+      <!-- End Page -->
+     <div id="endCont">
+        <h1>Task End</h1>
+        <p>This is the end of task. To continue, click the 'submit' button below.</p>
+        <button id="endButton">Exit</button>
+     </div>
     
     </body>
   </html>
