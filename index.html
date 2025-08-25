@@ -1,34 +1,35 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selective Interrogation Task</title>
-    <!-- Papa Parse (for parsing csv) -->
+    <!-- Import Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <!-- Import CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <style>
       body {
-        font-family: sans-serif;
-        text-align: center;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
+        /* viewport attributes */
+        height:100%;
         align-items: center;
         justify-content: center;
-        height: 100vh;
+        box-sizing: border-box;
         background-color: #f4f4f9;
-      }
+        /* font */
+        font-family: 'Montserrat';
+        text-align: center;
+        }
 
       h1 {
-        font-size: 2em;
-        margin-bottom: 5vh;
+        font-size: 16px;
+        margin: 14px 0px 14px 0px;
       }
-
+      
       p {
-        font-size: 1.2em;
-        padding-left: 20%;
-        padding-right: 20%;
-        margin-top: 2.5em;
-        margin-bottom: 4em;
+        font-size: 14px;
+        margin: 14px 0px 14px 0px;
       }
 
       #instructCont, #alertCont, #labelGrid, #promptCont, #contentCont, #endCont{
@@ -37,82 +38,60 @@
         max-width: 1100px;
       }
 
-      #instructCont {
+      #instructCont, #promptCont, #contentCont{
+        position: relative;
+        top: 50%;
         left: 50%;
         text-align: center;
       }
 
       #alertCont {
+        /* container position */
         position: fixed;
         top: 50%;
         left: 50%;
-        max-width: 400px;
-        padding: 1em 2em 1em 2em;
         transform: translate(-50%, -50%);
-        background-color: #fffae6;
-        border: 1px solid #f0c36d;
+        z-index: 10;
+        /* container atttributes */
+        max-width: 400px !important;
+        padding: 0.5vh;
+        background-color: #ffffff;
+        border: none;
         border-radius: 5px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        z-index: 10;
-        font-size: 1em;
+        /* child attributes */
+        font-size: 12px;
         text-align: center;
-      }
-
-      #promptCont {
-        left: 50%;
-        text-align: center;
-      }
-
-      #contentCont {
-        top: 50%;
-        left: 50%;
-        text-align: center;
-      }
-
-      #contentText {
-        font-size: 1.2em;
-        margin-top: 2.5em;
-        margin-bottom: 5em;
       }
 
       #labelGrid {
-        grid-template-columns: repeat(4, 1fr);
-        grid-gap: 5vh; 
+        /* grid attributes */
+        width: 80vw;
+        max-width: 1100px;
+        height: 80vh;
+        margin: 2vh auto;
+        /* child attributes */
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); 
+        grid-template-rows: repeat(4, 1fr);    
+        gap: 1vw;
       }
 
       button {
-        padding: 2em 2em 2em 2em;
-        border-radius: 5px;
-        border: none;
-        background-color: #fff;
-        transition: background-color 0.3s;
+        /* button attributes */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5vh;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        font-size: 1.1em;
+        /* button behaviour */
+        transition: background-color 0.3s;
         cursor: pointer;
-      }
-
-      #startButton {
-        padding: 0.5em 1em 0.5em 1em;
-        border-radius: 10px;
-        border: 1px solid #019a2f;
-        background-color: #00b135;
-        font-size: 1.1em;
-        color: #fff;
-        font-weight: bold;
-      }
-
-      #contButton {
-        padding: 0.5em 1em 0.5em 1em;
-        border-radius: 10px;
-        border: 1px solid #01229a;
-        background-color: #1f3a9d;
-        font-size: 1.1em;
-        color: #fff;
-        font-weight: bold;
       }
 
       button:hover {
         background-color: #e0e0e0;
+        transform: scale(1.05);
       }
 
       button:disabled {
@@ -120,6 +99,44 @@
         border: none;
         box-shadow: none;
         cursor: not-allowed;
+      }
+
+      button.start, button.continue, button.end {
+        /* button attributes */
+        padding: 0.5vh;
+        border-radius: 10px;
+        border: none;
+        /* text attributes */
+        text-align: center;
+        font-size: 12px;
+        font-weight: bold;
+        color: #fff;
+      }
+
+      button.start {
+        background-color: #00b135;
+      }
+      
+      button.continue {
+        background-color: #0065A2;
+      }
+      
+      button.end {
+        background-color: #BF2C34;
+      }
+
+      button.label {
+        /* button attributes */
+        width: 100%;
+        height: 100%; 
+        padding: 0.5vh;
+        border-radius: 3px;
+        border: none;
+        background-color: #fff;
+        /* text attributes */
+        text-align: center;
+        font-weight: normal;
+        color: #000;
       }
 
     </style>
@@ -163,7 +180,7 @@
       let gridNum = 0 // store grid number
       let usedLabels = []; // stored selected labels for each grid
 
-      function runIntro() { // instruction page function
+      function runIntro() { // run intro
         // display elements
         const intro = document.getElementById('introCont');
         intro.style.display = 'block';
@@ -183,7 +200,7 @@
         };
       }
 
-      function runAlert(message, duration, callback = null) { // task alerts
+      function runAlert(message, duration, callback = null) { // run alert
           // diplay alert
           const alert = document.getElementById('alertCont');
           alert.textContent = message;
@@ -195,66 +212,92 @@
           }, duration);
       }
 
-      function runGrid() { // generate subsets for each grid
-          const container = document.getElementById('labelGrid');
-          container.innerHTML ='';
-          container.style.display='grid';
-          const prompt = document.getElementById('promptCont');
-          prompt.style.display = 'block';
-          // define array shuffle function
-          function shuffleStim(array) {
-              for (let i = array.length - 1; i > 0; i--) {
-                  const j = Math.floor(Math.random() * (i + 1));
-                  [array[i], array[j]] = [array[j], array[i]];
-              }
+      function runGrid() { // run grid
+        // grid html
+        const container = document.getElementById('labelGrid');
+        container.innerHTML ='';
+        container.style.display='grid';
+        // prompt html
+        const prompt = document.getElementById('promptCont');
+        prompt.style.display = 'block';
+        // shuffle function
+        function shuffleStim(array) {
+          for (let i = array.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [array[i], array[j]] = [array[j], array[i]];
           }
-          // filter and subset labels
-          function getSubset(array, count) {
-              const unused = array.filter(item => !usedStim.has(item.label));
-              shuffleStim(unused);
-              return unused.slice(0, count);
-          }
-          // select subset
-          const selectedCategory1 = getSubset(Stim.category1, 8);
-          const selectedCategory2 = getSubset(Stim.category2, 8);
-          const allSelected = [...selectedCategory1, ...selectedCategory2];
-          shuffleStim(allSelected);
-          allSelected.forEach(option => usedStim.add(option.label)); // removed used stimuli from pool
-          // populate grid
-          allSelected.forEach((option, index) => {
-              const button = document.createElement('button');
-              button.textContent = option.label;
-              button.onclick = () => {
-                  document.getElementById('labelGrid').style.display = 'none';
-                  document.getElementById('promptCont').style.display = 'none';
-                  runContent(index, option.content);
-              }
-              container.appendChild(button);
+        }
+        // subset function
+        function getSubset(array, count) {
+            const unused = array.filter(item => !usedStim.has(item.label));
+            shuffleStim(unused);
+            return unused.slice(0, count);
+        }
+        // select stimuli from pool
+        const selectedCategory1 = getSubset(Stim.category1, 8);
+        console.log("Category 1 subset:", selectedCategory1);
+        const selectedCategory2 = getSubset(Stim.category2, 8);
+        console.log("Category 2 subset:", selectedCategory2);
+        // ensure sufficient stimuli 
+        if (selectedCategory1.length < 8 || selectedCategory2.length < 8) {
+          console.warn("Warning: Insuffient stimuli (<16) in pool to populate grid.");
+          return; 
+        }
+        // generate subset ofor grid
+        const allSelected = [...selectedCategory1, ...selectedCategory2];
+        shuffleStim(allSelected);
+        // add stimuli to used list
+        allSelected.forEach(option => usedStim.add(option.label)); 
+        // populate grid
+        allSelected.forEach((option, index) => {
+          // generate button 
+          const button = document.createElement('button');
+          button.classList.add('label');
+          button.textContent = option.label;
+          // event handling
+          button.addEventListener('click', () => {
+            container.style.display = 'none';
+            prompt.style.display = 'none';
+            runContent(index, option.content);
           });
+          container.appendChild(button);
+          return button;
+        });
+        // resize lalel text
+        let fontSize = 14; // set default font size
+        let fits = false;
+        while (!fits && fontSize > 8) {
+          fits = buttons.every(btn => {
+            btn.style.fontSize = fontSize + 'px';
+            return btn.scrollWidth <= btn.clientWidth;
+          });
+          if (!fits) fontSize -= 1;
+        }
+        buttons.forEach(btn => btn.style.fontSize = fontSize + 'px');
       }
 
       function runContent(index, content) { // display selected content
-          // display elements
-          document.getElementById('contentCont').style.display = 'block';
-          document.getElementById('contentText').textContent = content;
-          // event handling
-          document.getElementById('contButton').onclick = () => {
-              if (!usedLabels.includes(index)) { // disabled selected options
-                  usedLabels.push(index);
-                  const buttons = document.querySelectorAll('#labelGrid button');
-                  const usedButton = buttons[index];
-                  usedButton.textContent = '';
-                  usedButton.disabled = true;
-              }
-              if (usedLabels.length >= 8) { // generate next grid
-                  document.getElementById('contentCont').style.display = 'none';
-                  resetGrid();
-              } else { // display grid
-                  document.getElementById('contentCont').style.display = 'none';
-                  document.getElementById('labelGrid').style.display = 'grid';
-                  document.getElementById('promptCont').style.display = 'block';
-              }
-          };
+        // display elements
+        document.getElementById('contentCont').style.display = 'block';
+        document.getElementById('contentText').textContent = content;
+        // event handling
+        document.getElementById('contButton').onclick = () => {
+            if (!usedLabels.includes(index)) { // disabled selected options
+                usedLabels.push(index);
+                const buttons = document.querySelectorAll('#labelGrid button');
+                const usedButton = buttons[index];
+                usedButton.textContent = '';
+                usedButton.disabled = true;
+            }
+            if (usedLabels.length >= 8) { // generate next grid
+                document.getElementById('contentCont').style.display = 'none';
+                resetGrid();
+            } else { // display grid
+                document.getElementById('contentCont').style.display = 'none';
+                document.getElementById('labelGrid').style.display = 'grid';
+                document.getElementById('promptCont').style.display = 'block';
+            }
+        };
       }
 
         function resetGrid() { // reset grid
@@ -271,37 +314,38 @@
     </script>
   </head>
   <body onload="runIntro()">
-    <!-- Instructions Page -->
+    <!-- Start Menu -->
+    <!-- Task Instructions -->
      <div id="introCont">
         <h1>Task Instructions</h1>
         <p>Sample instructions: In this task you will read short passages describing [insert event or topic of interest]. You will be asked to select the passages you read from a pool of available options.
         <br><br>The task will present 4 screens, each of which will display 16 passage options. The options will be represented by a label indicating the [insert label stimuli] described in the corresponding passage. To select a passage you want to read, click the label using the mouse. Once you select a label, the passage will then be presented for you to read in full. Please ensure you read the passage carefully. Then, click the 'continue' button.
         <br><br>You will <strong>only</strong> be able to read <strong>half</strong> the available passage options on each screen. Once you have read half the available options on the screen, the screen will be refreshed, and new options will be presented.
-        <br><br>When you are ready, click the 'start' button below.</p>
-        <button id="startButton">Start</button>
+        <br><br>When you are ready, click the 'Start' button below.</p>
+        <button class="start" id="startButton">Start</button>
      </div>
     
     <!-- Grid Page -->
-     <div id="labelGrid"></div>
-     <div id="promptCont">
-        <p>Use the mouse to select an option.</p>
-     </div>
+    <div id="labelGrid"></div>
+    <div id="promptCont">
+      <p>Select an option to continue.</p>
+    </div>
     
     <!-- Content Page -->
-      <div id="contentCont">
-        <div id="contentText"></div>
-        <button id="contButton">Continue</button>
-      </div>
+    <div id="contentCont">
+      <div id="contentText"></div>
+      <button class="continue" id="contButton">Continue</button>
+    </div>
     
-      <!-- Alerts -->
-      <div id="alertCont"></div>
+    <!-- Alerts -->
+    <div id="alertCont"></div>
 
-      <!-- End Page -->
-     <div id="endCont">
-        <h1>Task End</h1>
-        <p>This is the end of task. To continue, click the 'submit' button below.</p>
-        <button id="endButton">Exit</button>
-     </div>
+    <!-- End Page -->
+    <div id="endCont">
+      <h1>Task End</h1>
+      <p>This is the end of task. To return to the demo menu, select the 'End Task' button below.</p>
+      <button class="end" id="endButton">End Task</button>
+    </div>
     
     </body>
   </html>
