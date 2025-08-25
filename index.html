@@ -11,25 +11,26 @@
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <style>
       body {
-        /* viewport attributes */
-        height:100%;
-        align-items: center;
-        justify-content: center;
+        height: 100%;
+        margin: 0;
         box-sizing: border-box;
         background-color: #f4f4f9;
-        /* font */
-        font-family: 'Montserrat';
+        font-family: 'Montserrat', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         text-align: center;
-        }
+      }
 
       h1 {
         font-size: 16px;
-        margin: 14px 0px 14px 0px;
+        margin: 14px 0px;
       }
       
       p {
         font-size: 14px;
-        margin: 14px 0px 14px 0px;
+        margin: 14px 0px;
       }
 
       #instructCont, #alertCont, #labelGrid, #promptCont, #contentCont, #endCont{
@@ -38,11 +39,11 @@
         max-width: 1100px;
       }
 
-      #instructCont, #promptCont, #contentCont{
-        position: relative;
-        top: 50%;
-        left: 50%;
-        text-align: center;
+      #instructCont, #promptCont, #contentCont {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
       }
 
       #alertCont {
@@ -82,6 +83,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         padding: 0.5vh;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         /* button behaviour */
@@ -113,17 +116,9 @@
         color: #fff;
       }
 
-      button.start {
-        background-color: #00b135;
-      }
-      
-      button.continue {
-        background-color: #0065A2;
-      }
-      
-      button.end {
-        background-color: #BF2C34;
-      }
+      button.start { background-color: #00b135; }
+      button.continue { background-color: #0065A2; }
+      button.end { background-color: #BF2C34; }
 
       button.label {
         /* button attributes */
@@ -251,17 +246,18 @@
         // populate grid
         allSelected.forEach((option, index) => {
           // generate button 
-          const button = document.createElement('button');
-          button.classList.add('label');
-          button.textContent = option.label;
-          // event handling
-          button.addEventListener('click', () => {
-            container.style.display = 'none';
-            prompt.style.display = 'none';
-            runContent(index, option.content);
+          const buttons = allSelected.map((option, index) => {
+            const button = document.createElement('button');
+            button.classList.add('label');
+            button.textContent = option.label;
+            button.addEventListener('click', () => {
+              container.style.display = 'none';
+              prompt.style.display = 'none';
+              runContent(index, option.content);
+            });
+            container.appendChild(button);
+            return button;
           });
-          container.appendChild(button);
-          return button;
         });
         // resize lalel text
         let fontSize = 14; // set default font size
@@ -269,15 +265,15 @@
         while (!fits && fontSize > 8) {
           fits = buttons.every(btn => {
             btn.style.fontSize = fontSize + 'px';
-            return btn.scrollWidth <= btn.clientWidth;
+            return btn.scrollWidth <= btn.clientWidth && btn.scrollHeight <= btn.clientHeight;
           });
-          if (!fits) fontSize -= 1;
+          if (!fits) fontSize--;
         }
         buttons.forEach(btn => btn.style.fontSize = fontSize + 'px');
       }
 
       function runContent(index, content) { // display selected content
-        // display elements
+        // html elements
         document.getElementById('contentCont').style.display = 'block';
         document.getElementById('contentText').textContent = content;
         // event handling
@@ -300,16 +296,16 @@
         };
       }
 
-        function resetGrid() { // reset grid
-            if (usedStim.size === 64) {
-                runAlert("This is the end of the task.", 3000);
-                return;
-            } else {
-                usedLabels = [];
-                gridNum += 1;
-                runAlert("New options will now be made available.", 3000, runGrid);
-            }
-        }
+      function resetGrid() { // reset grid
+          if (usedStim.size === 64) {
+              runAlert("This is the end of the task.", 3000);
+              return;
+          } else {
+              usedLabels = [];
+              gridNum += 1;
+              runAlert("New options will now be made available.", 3000, runGrid);
+          }
+      }
     
     </script>
   </head>
