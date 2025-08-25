@@ -33,11 +33,22 @@
         margin: 14px 15vw;
       }
 
-      #instructCont, #promptCont, #contentCont, #endCont {
-        display: flex;
+      #instructCont, #alertCont, #labelGrid, #promptCont, #contentCont, #endCont{
+        display: none; /* initially hide all containers */
+        width: 85%;
+        max-width: 1100px;
+      }
+
+      #instructCont, #contentCont, #endCont {
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        text-align: center; 
+        height: 100%;
+        margin: 0 auto;
+      }
+
+      #promptCont {
         text-align: center; 
         height: 100%;
         margin: 0 auto;
@@ -73,12 +84,6 @@
         grid-template-columns: repeat(4, 1fr); 
         grid-template-rows: repeat(4, 1fr);    
         gap: 1vw;
-      }
-
-      #instructCont, #alertCont, #labelGrid, #promptCont, #contentCont, #endCont{
-        display: none; /* initially hide all containers */
-        width: 85%;
-        max-width: 1100px;
       }
 
       button {
@@ -134,6 +139,7 @@
         /* text attributes */
         text-align: center;
         font-weight: normal;
+        font-size:12px;
         color: #000;
       }
 
@@ -211,21 +217,19 @@
       }
 
       function runGrid() { // run grid
-        // grid html
         const container = document.getElementById('labelGrid');
         container.innerHTML ='';
         container.style.display='grid';
-        // prompt html
         const prompt = document.getElementById('promptCont');
-        prompt.style.display = 'flex';
-        // shuffle function
+        prompt.style.display = 'block';
+        // define array shuffle function
         function shuffleStim(array) {
-          for (let i = array.length - 1; i > 0; i--) {
-              const j = Math.floor(Math.random() * (i + 1));
-              [array[i], array[j]] = [array[j], array[i]];
-          }
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
         }
-        // subset function
+        // filter and subset labels
         function getSubset(array, count) {
             const unused = array.filter(item => !usedStim.has(item.label));
             shuffleStim(unused);
@@ -233,46 +237,22 @@
         }
         // select stimuli from pool
         const selectedCategory1 = getSubset(Stim.category1, 8);
-        console.log("Category 1 subset:", selectedCategory1);
         const selectedCategory2 = getSubset(Stim.category2, 8);
-        console.log("Category 2 subset:", selectedCategory2);
-        // ensure sufficient stimuli 
-        if (selectedCategory1.length < 8 || selectedCategory2.length < 8) {
-          console.warn("Warning: Insuffient stimuli (<16) in pool to populate grid.");
-          return; 
-        }
-        // generate subset ofor grid
+        // generate subset for grid
         const allSelected = [...selectedCategory1, ...selectedCategory2];
         shuffleStim(allSelected);
-        // add stimuli to used list
-        allSelected.forEach(option => usedStim.add(option.label)); 
+        allSelected.forEach(option => usedStim.add(option.label)); // removed used stimuli from pool
         // populate grid
         allSelected.forEach((option, index) => {
-          // generate button 
-          const buttons = allSelected.map((option, index) => {
             const button = document.createElement('button');
-            button.classList.add('label');
-            button.textContent = option.label;
-            button.addEventListener('click', () => {
-              container.style.display = 'none';
-              prompt.style.display = 'none';
-              runContent(index, option.content);
-            });
+            button.innerHTML = option.label;
+            button.onclick = () => {
+                document.getElementById('labelGrid').style.display = 'none';
+                document.getElementById('promptCont').style.display = 'none';
+                runContent(index, option.content);
+            }
             container.appendChild(button);
-            return button;
-          });
         });
-        // resize lalel text
-        let fontSize = 14; // set default font size
-        let fits = false;
-        while (!fits && fontSize > 8) {
-          fits = buttons.every(btn => {
-            btn.style.fontSize = fontSize + 'px';
-            return btn.scrollWidth <= btn.clientWidth && btn.scrollHeight <= btn.clientHeight;
-          });
-          if (!fits) fontSize--;
-        }
-        buttons.forEach(btn => btn.style.fontSize = fontSize + 'px');
       }
 
       function runContent(index, content) { // display selected content
