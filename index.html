@@ -161,7 +161,7 @@
             // event handling
             document.getElementById('startButton').onclick = async () => {
                 try {
-                  const Stim = await loadStim("js/SelectiveInterrogationTask_Stimuli_FilmStressor.csv");
+                  const Stim = await loadStim("stimuli/SelectiveInterrogationTask_Stimuli_FilmStressor.csv");
                   window.Stim = Stim;
                   console.log("Stimuli loaded:", Stim);
                   intro.style.display = 'none';
